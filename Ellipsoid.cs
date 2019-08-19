@@ -115,29 +115,29 @@ namespace GeodeticFunctions
         /// <summary>
         /// Первая сфероидическая функция.
         /// </summary>
-        /// <param name="B"> Широта точки в градусах.</param>
+        /// <param name="B"> Широта точки в радианах.</param>
         /// <returns></returns> 
         public double GetW(double B)
         {
-            return Sqrt(1 - Pow(e1 * Sin(B / 180 * PI), 2));            
+            return Sqrt(1 - Pow(e1 * Sin(B), 2));            
         }
 
 
         /// <summary>
         /// Вторая сфероидическая функция.
         /// </summary>
-        /// <param name="B"> Широта точки в градусах.</param>
+        /// <param name="B"> Широта точки в радианах.</param>
         /// <returns></returns> 
         public double GetV(double B)
         {
-            return Sqrt(1 + Pow(e2 * Cos(B / 180 * PI), 2));
+            return Sqrt(1 + Pow(e2 * Cos(B), 2));
         }
 
 
         /// <summary>
         /// Возвращает значение радиуса кривизны меридианного сечения.
         /// </summary>
-        /// <param name="B"> Широта точки в градусах.</param>
+        /// <param name="B"> Широта точки в радианах.</param>
         /// <returns></returns>
         public double RadiusM(double B)
         {
@@ -148,7 +148,7 @@ namespace GeodeticFunctions
         /// <summary>
         /// Возвращает значение радиуса кривизны сечения первого вертикала.
         /// </summary>
-        /// <param name="B"> Широта точки в градусах.</param>
+        /// <param name="B"> Широта точки в радианах.</param>
         /// <returns></returns>
         public double RadiusN(double B)
         {
@@ -159,7 +159,7 @@ namespace GeodeticFunctions
         /// <summary>
         /// Возвращает значение среднего радиуса кривизны.
         /// </summary>
-        /// <param name="B"> Широта точки в градусах.</param>
+        /// <param name="B"> Широта точки в радианах.</param>
         /// <returns></returns>
         public double RadiusR(double B)
         {
@@ -170,23 +170,23 @@ namespace GeodeticFunctions
         /// <summary>
         /// Возвращает радиус кривизны параллели.
         /// </summary>
-        /// <param name="B"> Широта точки в градусах.</param>
+        /// <param name="B"> Широта точки в радианах.</param>
         /// <returns></returns>
         public double RadiusParallel(double B)
         {
-            return RadiusN(B) * Cos(B / 180 * PI);
+            return RadiusN(B) * Cos(B);
         }
 
 
         /// <summary>
         /// Возвращает радиус кривизны произвольного нормального сечения.
         /// </summary>
-        /// <param name="B"> Широта точки в градусах.</param>
-        /// <param name="A"> Азимут сечения в градусах.</param>
+        /// <param name="B"> Широта точки в радианах.</param>
+        /// <param name="A"> Азимут сечения в радианах.</param>
         /// <returns></returns>
         public double RadiusAzimut(double B, double A)
         {
-            return RadiusN(B) * Cos(B / 180 * PI);
+            return RadiusM(B) * RadiusN(B) / (RadiusN(B) * Pow(Cos(A), 2) + RadiusM(B) * Pow(Sin(A), 2));
         }
 
 
@@ -199,7 +199,7 @@ namespace GeodeticFunctions
         /// <returns></returns>
         public double ParallelArc(double B, double L1, double L2)
         {
-            return RadiusParallel(B) * Abs(L2 - L1) / 180 * PI;
+            return RadiusParallel(B) * Abs(L2 - L1);
         }
 
 
@@ -216,8 +216,8 @@ namespace GeodeticFunctions
             double a4 = 15.0 / 64.0 * Pow(e1, 4) + 105.0 / 256.0 * Pow(e1, 6) + 2205.0 / 4096.0 * Pow(e1, 8);
             double a6 = 35.0 / 512.0 * Pow(e1, 6) + 315.0 / 4096.0 * Pow(e1, 8);
 
-            double X1 = a * (1 - e1 * e1) * (a0 * B1 / 180 * PI - a2 / 2 * Sin(2 * B1 / 180 * PI) + a4 / 4 * Sin(4 * B1 / 180 * PI) - a6 / 6 * Sin(6 * B1 / 180 * PI));
-            double X2 = a * (1 - e1 * e1) * (a0 * B2 / 180 * PI - a2 / 2 * Sin(2 * B2 / 180 * PI) + a4 / 4 * Sin(4 * B2 / 180 * PI) - a6 / 6 * Sin(6 * B2 / 180 * PI));
+            double X1 = this.a * (1 - e1 * e1) * (a0 * B1 - a2 / 2 * Sin(2 * B1) + a4 / 4 * Sin(4 * B1) - a6 / 6 * Sin(6 * B1));
+            double X2 = this.a * (1 - e1 * e1) * (a0 * B2 - a2 / 2 * Sin(2 * B2) + a4 / 4 * Sin(4 * B2) - a6 / 6 * Sin(6 * B2));
 
             double X = Abs(X2 - X1);
             return X;
@@ -225,7 +225,7 @@ namespace GeodeticFunctions
 
 
         /// <summary>
-        /// Вычисляет широту по заданной длине дуги меридиана.
+        /// Возвращает широту в радианах по заданной длине дуги меридиана.
         /// </summary>
         /// <param name="X"> Длина меридиана, м.</param>
         /// <returns></returns>
@@ -246,32 +246,24 @@ namespace GeodeticFunctions
                 B = Bx;
             } while (epsilon > 0.00001 / 206265); // проверить работает ли с такой точностью
 
-            return B * 180 / PI;
+            return B;
         }
-
 
 
         /// <summary>
-        /// Возвращает значение площади съемочной трапеции.
+        /// Возвращает значение площади съемочной трапеции в метрах квадратных.
         /// </summary>
-        /// <param name="B1"> Широта южной границы.</param>
-        /// <param name="B2"> Широта северной границы.</param>
-        /// <param name="L1"> Долгота западной границы.</param>
-        /// <param name="L2"> Долгота восточной границы.</param>
+        /// <param name="B1"> Широта южной границы в радианах.</param>
+        /// <param name="B2"> Широта северной границы в радианах.</param>
+        /// <param name="L1"> Долгота западной границы в радианах.</param>
+        /// <param name="L2"> Долгота восточной границы в радианах.</param>
         /// <returns></returns>
         public double AreaCalculate(double B1, double B2, double L1, double L2)
         {
-            return b * b * Abs(L2 - L1) / 180.0 * PI * (Sin(B2 / 180 * PI) - Sin(B1 / 180 * PI)
-                + 2.0 / 3.0 * Pow(e1, 2) * (Pow(Sin(B2 / 180 * PI), 3) - Pow(Sin(B1 / 180 * PI), 3))
-                + 3.0 / 5.0 * Pow(e1, 4) * (Pow(Sin(B2 / 180 * PI), 5) - Pow(Sin(B1 / 180 * PI), 5))
-                + 4.0 / 7.0 * Pow(e1, 6) * (Pow(Sin(B2 / 180 * PI), 7) - Pow(Sin(B1 / 180 * PI), 7)));
-
+            return b * b * Abs(L2 - L1) / 180.0 * PI * (Sin(B2) - Sin(B1)
+                + 2.0 / 3.0 * Pow(e1, 2) * (Pow(Sin(B2), 3) - Pow(Sin(B1), 3))
+                + 3.0 / 5.0 * Pow(e1, 4) * (Pow(Sin(B2), 5) - Pow(Sin(B1), 5))
+                + 4.0 / 7.0 * Pow(e1, 6) * (Pow(Sin(B2), 7) - Pow(Sin(B1), 7)));
         }
-
-
-        
-
-
-
     }
 }
