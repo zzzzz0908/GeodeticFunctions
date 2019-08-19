@@ -43,6 +43,9 @@
   <ItemGroup>
     <Compile Include="CoordinateConverter.cs" />
     <Compile Include="Ellipsoid.cs" />
+    <Compile Include="GeodeticProblems.cs" />
+    <Compile Include="PointLatLong.cs" />
+    <Compile Include="PointXY.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

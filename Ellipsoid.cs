@@ -8,33 +8,108 @@ using static System.Math;
 
 namespace GeodeticFunctions
 {
+
+    /// <summary>
+    /// Содержит названиия доступных эллипсоидов.
+    /// </summary>
+    public enum Ellipsoids
+    {
+        /// <summary>
+        /// Эллипсоид Красовского.
+        /// </summary>
+        Krasovskiy,
+
+        /// <summary>
+        /// Эллипсоид WGS 84.
+        /// </summary>
+        WGS84,
+
+        /// <summary>
+        /// Эллипсоид ПЗ-90 (также ПЗ-90.02 и ПЗ-90.11).
+        /// </summary>
+        PZ90
+    }
+
     public class Ellipsoid
     {
+        /// <summary>
+        /// Инициализирует новый экземпляр класса <see cref="Ellipsoid"/>.
+        /// </summary>
+        /// <param name="a"> Большая (экваториальная) полуось эллипсоида, м. </param>
+        /// <param name="b"> Малая (полярная) полуось эллипсоида, м. </param>
         public Ellipsoid(double a, double b)
         {
             this.a = a;
             this.b = b;
+            e1_2 = 1 - a * a / (b * b);
+            e2_2 = a * a / (b * b) - 1;  
         }
 
-        public double a { get; }
-        public double b { get; }
-        
+        /// <summary>
+        /// Инициализирует новый экземпляр класса <see cref="Ellipsoid"/>.
+        /// </summary>
+        /// <param name="ell"> Имя эллипсоида из коллекции доступных эллипсоидов. </param>
+        public Ellipsoid(Ellipsoids ell)
+        {
+            double[,] ellParams = new double[,]
+            {
+                // Эллипсоид Красовского
+                { 6378245.000, 6356863.018773 },
+                // Эллипсоид WGS 84
+                { 6378137.000, 6356752.314245 },
+                // Эллипсоид ПЗ-90
+                { 6378136.000, 6356751.3618 }
+            };
 
-        //сжатие f
+            this.a = ellParams[(int)ell, 0];
+            this.b = ellParams[(int)ell, 1];
+        }
+
+        /// <summary>
+        /// Большая (экваториальная) полуось эллипсоида, м.
+        /// </summary>
+        public double a { get; }
+
+        /// <summary>
+        /// Малая (полярная) полуось эллипсоида, м.
+        /// </summary>
+        public double b { get; }
+
+        /// <summary>
+        /// Квадрат первого эксцентрисистета.
+        /// </summary>
+        private readonly double e1_2;
+
+        /// <summary>
+        /// Квадрат второго эксцентрисистета.
+        /// </summary>
+        private readonly double e2_2;
+
+        /// <summary>
+        /// Полярное сжатие.
+        /// </summary>
         public double f => (a - b) / a;
 
-        //Первый эксцентриситет 
-        public double e1 => Sqrt((a * a - b * b)) / a;
+        /// <summary>
+        /// Первый эксцентристет.
+        /// </summary>
+        public double e1 => Sqrt(e1_2);
 
-        //Второй эксцентриситет
-        public double e2 => Sqrt((a * a - b * b)) / b;
+        /// <summary>
+        /// Второй эксцентриситет.
+        /// </summary>
+        public double e2 => Sqrt(e2_2);
 
-        //Вспомогательна функция эксцентриситета
+
+        /// <summary>
+        /// Вспомогательна функция эксцентриситета.
+        /// </summary>
+        /// <param name="B"> Широта в радианах. </param>
+        /// <returns></returns>
         public double GetEta(double B)
         {
-            return e2 * Cos(B / 180 * PI);
+            return e2 * Cos(B);
         }
-
 
 
         /// <summary>
@@ -44,7 +119,7 @@ namespace GeodeticFunctions
         /// <returns></returns> 
         public double GetW(double B)
         {
-            return Sqrt(1 - Pow(e1 * Sin(B / 180 * PI), 2));
+            return Sqrt(1 - Pow(e1 * Sin(B / 180 * PI), 2));            
         }
 
 
@@ -169,7 +244,7 @@ namespace GeodeticFunctions
                 Bx = 1.0 / a0 * (X / (a * (1 - e1 * e1)) + a2 / 2.0 * Sin(2 * B) - a4 / 4.0 * Sin(4 * B) + a6 / 6.0 * Sin(6 * B));
                 epsilon = Abs(Bx - B);
                 B = Bx;
-            } while (epsilon > 0.00005 / 206265);
+            } while (epsilon > 0.00001 / 206265); // проверить работает ли с такой точностью
 
             return B * 180 / PI;
         }
