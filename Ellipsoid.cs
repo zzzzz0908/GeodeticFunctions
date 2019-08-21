@@ -41,7 +41,7 @@ namespace GeodeticFunctions
         {
             this.a = a;
             this.b = b;
-            e1_2 = 1 - a * a / (b * b);
+            e1_2 = 1 - b * b / (a * a);
             e2_2 = a * a / (b * b) - 1;  
         }
 
@@ -61,8 +61,11 @@ namespace GeodeticFunctions
                 { 6378136.000, 6356751.3618 }
             };
 
+            //this(ellParams[(int)ell, 0], ellParams[(int)ell, 1]);
             this.a = ellParams[(int)ell, 0];
             this.b = ellParams[(int)ell, 1];
+            e1_2 = 1 - b * b / (a * a);
+            e2_2 = a * a / (b * b) - 1;
         }
 
         /// <summary>
