@@ -111,21 +111,31 @@ namespace GeodeticFunctions
         /// <returns></returns>
         public double GetEta(double B)
         {
+            // TODO: Оптимизировать в конвертере координат 
             return e2 * Cos(B);
         }
 
+        /// <summary>
+        /// Квадрат второй сфероидической функции.
+        /// </summary>
+        /// <param name="B"> Широта точки в радианах.</param>
+        /// <returns></returns>
+        private double GetW2(double B)
+        {
+            return 1 - Pow(e1 * Sin(B), 2);
+        }
 
         /// <summary>
         /// Первая сфероидическая функция.
         /// </summary>
         /// <param name="B"> Широта точки в радианах.</param>
         /// <returns></returns> 
-        public double GetW(double B)
+        private double GetW(double B)
         {
-            return Sqrt(1 - Pow(e1 * Sin(B), 2));            
+            return Sqrt(GetW2(B));            
         }
-
-
+        
+        
         /// <summary>
         /// Вторая сфероидическая функция.
         /// </summary>
@@ -133,6 +143,7 @@ namespace GeodeticFunctions
         /// <returns></returns> 
         public double GetV(double B)
         {
+            // TODO: стоит ли использовать
             return Sqrt(1 + Pow(e2 * Cos(B), 2));
         }
 
@@ -144,7 +155,8 @@ namespace GeodeticFunctions
         /// <returns></returns>
         public double RadiusM(double B)
         {
-            return a * (1 - e1 * e1) / Pow(GetW(B), 3);
+            //return a * (1 - e1 * e1) / Pow(GetW(B), 3);
+            return b * b / (a * Pow(GetW2(B), 1.5));
         }
 
 
@@ -166,7 +178,7 @@ namespace GeodeticFunctions
         /// <returns></returns>
         public double RadiusR(double B)
         {
-            return b / Pow(GetW(B), 2);
+            return b / GetW2(B);
         }
 
 
@@ -214,13 +226,15 @@ namespace GeodeticFunctions
         /// <returns></returns>
         public double MeridianArc(double B1, double B2)
         {
-            double a0 = 1.0 + 3.0 / 4.0 * Pow(e1, 2) + 45.0 / 64.0 * Pow(e1, 4) + 175.0 / 256.0 * Pow(e1, 6) + 11025.0 / 16384.0 * Pow(e1, 8);
-            double a2 = 3.0 / 4.0 * Pow(e1, 2) + 15.0 / 16.0 * Pow(e1, 4) + 525.0 / 512.0 * Pow(e1, 6) + 2205.0 / 2048.0 * Pow(e1, 8);
-            double a4 = 15.0 / 64.0 * Pow(e1, 4) + 105.0 / 256.0 * Pow(e1, 6) + 2205.0 / 4096.0 * Pow(e1, 8);
-            double a6 = 35.0 / 512.0 * Pow(e1, 6) + 315.0 / 4096.0 * Pow(e1, 8);
+            double a0 = 1.0 + 3.0 / 4.0 * e1_2 + 45.0 / 64.0 * Pow(e1_2, 2) + 175.0 / 256.0 * Pow(e1_2, 3) + 11025.0 / 16384.0 * Pow(e1_2, 4);
+            double a2 = 3.0 / 4.0 * e1_2 + 15.0 / 16.0 * Pow(e1_2, 2) + 525.0 / 512.0 * Pow(e1_2, 3) + 2205.0 / 2048.0 * Pow(e1_2, 4);
+            double a4 = 15.0 / 64.0 * Pow(e1_2, 2) + 105.0 / 256.0 * Pow(e1_2, 3) + 2205.0 / 4096.0 * Pow(e1_2, 4);
+            double a6 = 35.0 / 512.0 * Pow(e1_2, 3) + 315.0 / 2048.0 * Pow(e1_2, 4); //было 315 / 4096
+            // добавление
+            double a8 = 315.0 / 16384.0 * Pow(e1_2, 4);
 
-            double X1 = this.a * (1 - e1 * e1) * (a0 * B1 - a2 / 2 * Sin(2 * B1) + a4 / 4 * Sin(4 * B1) - a6 / 6 * Sin(6 * B1));
-            double X2 = this.a * (1 - e1 * e1) * (a0 * B2 - a2 / 2 * Sin(2 * B2) + a4 / 4 * Sin(4 * B2) - a6 / 6 * Sin(6 * B2));
+            double X1 = this.a * (1 - e1_2) * (a0 * B1 - a2 / 2 * Sin(2 * B1) + a4 / 4 * Sin(4 * B1) - a6 / 6 * Sin(6 * B1) + a8 / 8 * Sin(B1));
+            double X2 = this.a * (1 - e1_2) * (a0 * B2 - a2 / 2 * Sin(2 * B2) + a4 / 4 * Sin(4 * B2) - a6 / 6 * Sin(6 * B2) + a8 / 8 * Sin(B2));
 
             double X = Abs(X2 - X1);
             return X;
@@ -234,20 +248,23 @@ namespace GeodeticFunctions
         /// <returns></returns>
         public double LatitudeCalc(double X)
         {
-            double a0 = 1.0 + 3.0 / 4.0 * Pow(e1, 2) + 45.0 / 64.0 * Pow(e1, 4) + 175.0 / 256.0 * Pow(e1, 6) + 11025.0 / 16384.0 * Pow(e1, 8);
-            double a2 = 3.0 / 4.0 * Pow(e1, 2) + 15.0 / 16.0 * Pow(e1, 4) + 525.0 / 512.0 * Pow(e1, 6) + 2205.0 / 2048.0 * Pow(e1, 8);
-            double a4 = 15.0 / 64.0 * Pow(e1, 4) + 105.0 / 256.0 * Pow(e1, 6) + 2205.0 / 4096.0 * Pow(e1, 8);
-            double a6 = 35.0 / 512.0 * Pow(e1, 6) + 315.0 / 4096.0 * Pow(e1, 8);
+            double a0 = 1.0 + 3.0 / 4.0 * e1_2 + 45.0 / 64.0 * Pow(e1_2, 2) + 175.0 / 256.0 * Pow(e1_2, 3) + 11025.0 / 16384.0 * Pow(e1_2, 4);
+            double a2 = 3.0 / 4.0 * e1_2 + 15.0 / 16.0 * Pow(e1_2, 2) + 525.0 / 512.0 * Pow(e1_2, 3) + 2205.0 / 2048.0 * Pow(e1_2, 4);
+            double a4 = 15.0 / 64.0 * Pow(e1_2, 2) + 105.0 / 256.0 * Pow(e1_2, 3) + 2205.0 / 4096.0 * Pow(e1_2, 4);
+            double a6 = 35.0 / 512.0 * Pow(e1_2, 3) + 315.0 / 2048.0 * Pow(e1_2, 4);
+            // добавление
+            double a8 = 315.0 / 16384.0 * Pow(e1_2, 4);
 
             double B = 0;
             double Bx;
             double epsilon;
+
             do
             {
-                Bx = 1.0 / a0 * (X / (a * (1 - e1 * e1)) + a2 / 2.0 * Sin(2 * B) - a4 / 4.0 * Sin(4 * B) + a6 / 6.0 * Sin(6 * B));
+                Bx = 1.0 / a0 * (X / (a * (1 - e1_2)) + a2 / 2.0 * Sin(2 * B) - a4 / 4.0 * Sin(4 * B) + a6 / 6.0 * Sin(6 * B) - a8 / 8.0 * Sin(B));
                 epsilon = Abs(Bx - B);
                 B = Bx;
-            } while (epsilon > 0.00001 / 206265); // проверить работает ли с такой точностью
+            } while (epsilon > 1E-12); // проверить работает ли с такой точностью  0.00001 / 206265
 
             return B;
         }
@@ -263,10 +280,10 @@ namespace GeodeticFunctions
         /// <returns></returns>
         public double AreaCalculate(double B1, double B2, double L1, double L2)
         {
-            return b * b * Abs(L2 - L1) / 180.0 * PI * (Sin(B2) - Sin(B1)
-                + 2.0 / 3.0 * Pow(e1, 2) * (Pow(Sin(B2), 3) - Pow(Sin(B1), 3))
-                + 3.0 / 5.0 * Pow(e1, 4) * (Pow(Sin(B2), 5) - Pow(Sin(B1), 5))
-                + 4.0 / 7.0 * Pow(e1, 6) * (Pow(Sin(B2), 7) - Pow(Sin(B1), 7)));
+            return b * b * Abs(L2 - L1) * (Sin(B2) - Sin(B1)
+                + 2.0 / 3.0 * e1_2 * (Pow(Sin(B2), 3) - Pow(Sin(B1), 3))
+                + 3.0 / 5.0 * Pow(e1_2, 2) * (Pow(Sin(B2), 5) - Pow(Sin(B1), 5))
+                + 4.0 / 7.0 * Pow(e1_2, 3) * (Pow(Sin(B2), 7) - Pow(Sin(B1), 7)));
         }
     }
 }

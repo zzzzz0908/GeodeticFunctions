@@ -127,6 +127,7 @@ namespace GeodeticFunctions
             double t = Tan(Bx / 180 * PI);
             double eta = ell.GetEta(Bx);
 
+            // заменить GetV
             double A2 = -t * Pow(ell.GetV(Bx), 2) / (2 * Pow(Nx, 2));
 
             double A4 = -A2 / (12.0 * Pow(Nx, 2)) * (5.0 + 3 * Pow(t, 2) + Pow(eta, 2) - 9.0 * Pow(eta, 2) * Pow(t, 2) - 4 * Pow(eta, 4));
