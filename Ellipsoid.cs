@@ -224,7 +224,7 @@ namespace GeodeticFunctions
         /// <param name="B1"> Широта начальной точки.</param>
         /// <param name="B2"> Широта конечной точки.</param>
         /// <returns></returns>
-        public double MeridianArc(double B1, double B2)
+        private double MeridianArc2(double B1, double B2)
         {
             double a0 = 1.0 + 3.0 / 4.0 * e1_2 + 45.0 / 64.0 * Pow(e1_2, 2) + 175.0 / 256.0 * Pow(e1_2, 3) + 11025.0 / 16384.0 * Pow(e1_2, 4);
             double a2 = 3.0 / 4.0 * e1_2 + 15.0 / 16.0 * Pow(e1_2, 2) + 525.0 / 512.0 * Pow(e1_2, 3) + 2205.0 / 2048.0 * Pow(e1_2, 4);
@@ -239,6 +239,31 @@ namespace GeodeticFunctions
             double X = Abs(X2 - X1);
             return X;
         }
+
+        /// <summary>
+        /// Возвращает значение длины дуги меридиана.
+        /// </summary>
+        /// <param name="B1"> Широта начальной точки.</param>
+        /// <param name="B2"> Широта конечной точки.</param>
+        /// <returns></returns>
+        public double MeridianArc(double B1, double B2)
+        {
+            // производительность лучше, чем у MeridianArc2
+
+            double n = (a - b) / (a + b);
+
+            // в формуле коэффициенты B
+            double a0 = b * (1 + n + 5.0 / 4.0 * n * n + 5.0 / 4.0 * n * n * n);
+            double a2 = -b * (1.5 * n + 1.5 * n * n + 21.0 / 16.0 * n * n * n);
+            double a4 = b * (15.0 / 16.0 * n * n + 15.0 / 16.0 * n * n * n);
+            double a6 = -b * (35.0 / 48.0 * n * n * n);
+
+            double X1 = a0 * B1 + a2 * Sin(2 * B1) + a4 * Sin(4 * B1) + a6 * Sin(6 * B1);
+            double X2 = a0 * B2 + a2 * Sin(2 * B2) + a4 * Sin(4 * B2) + a6 * Sin(6 * B2);
+            double result = Abs(X2 - X1);
+            return result;
+        }
+
 
 
         /// <summary>
