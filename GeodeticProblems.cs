@@ -75,10 +75,10 @@ namespace GeodeticFunctions
         public static void InverseProblemVincenty(double B1, double L1, double B2, double L2, Ellipsoid ellipsoid, out double S, out double A12, out double A21)
         {
             //широта, долгота в радианы
-            B1 *= PI / 180;
-            L1 *= PI / 180;
-            B2 *= PI / 180;
-            L2 *= PI / 180;
+            //B1 *= PI / 180;
+            //L1 *= PI / 180;
+            //B2 *= PI / 180;
+            //L2 *= PI / 180;
 
             //приведенная широта
             double U1 = Atan((1 - ellipsoid.f) * Tan(B1));
@@ -113,15 +113,14 @@ namespace GeodeticFunctions
 
                 λ = L + (1 - C) * ellipsoid.f * sin_alpha * (sigma + C * sin_sigma * (cos_2sigma + C * cos_sigma * (-1 + 2 * Pow(cos_2sigma, 2))));
 
-
             }
-            while (Abs(λ - λ1) > Pow(10, -12));
+            while (Abs(λ - λ1) > 1E-14);
 
 
             double u2 = cos2_alpha * (Pow(ellipsoid.a, 2) - Pow(ellipsoid.b, 2)) / Pow(ellipsoid.b, 2);
-            double A = 1 + u2 / 16384 * (4096 + u2 * (-768 + u2 * (320 * 175 * u2)));
+            double A = 1 + u2 / 16384 * (4096 + u2 * (-768 + u2 * (320 - 175 * u2)));  //было 320 * 175
             double B = u2 / 1024 * (256 + u2 * (-128 + u2 * (74 - 47 * u2)));
-            double deltaSigma = B * Sin(sigma) * (cos_2sigma + 1.0 / 4.0 * B * (
+            double deltaSigma = B * Sin(sigma) * (cos_2sigma + B / 4.0 * (
                 Cos(sigma) * (-1 + 2 * Pow(cos_2sigma, 2)) -
                 B / 6 * cos_2sigma * (-3 + 4 * Pow(Sin(sigma), 2)) * (-3 + 4 * Pow(cos_2sigma, 2))));
 
