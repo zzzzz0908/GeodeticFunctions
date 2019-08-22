@@ -9,7 +9,7 @@ namespace GeodeticFunctions
 {
     public class CoordinateConverter
     {
-        Ellipsoid ell;
+        public Ellipsoid ell;
         
         /// <summary>
         /// Возвращает значение плоской координаты X.
@@ -69,7 +69,7 @@ namespace GeodeticFunctions
 
             double l = (L - L0);
 
-            double y = b1 + b3 * Pow(l, 3) + b5 * Pow(l, 5) + b7 * Pow(l, 7);
+            double y = b1 * l + b3 * Pow(l, 3) + b5 * Pow(l, 5) + b7 * Pow(l, 7); // добавлено * l
 
             return y;
         }
