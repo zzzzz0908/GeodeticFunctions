@@ -122,7 +122,7 @@ namespace GeodeticFunctions
         /// <returns></returns>
         private double GetW2(double B)
         {
-            return 1 - Pow(e1 * Sin(B), 2);
+            return 1 - e1_2 * Pow(Sin(B), 2);
         }
 
         /// <summary>
@@ -289,7 +289,7 @@ namespace GeodeticFunctions
                 Bx = 1.0 / a0 * (X / (a * (1 - e1_2)) + a2 / 2.0 * Sin(2 * B) - a4 / 4.0 * Sin(4 * B) + a6 / 6.0 * Sin(6 * B) - a8 / 8.0 * Sin(B));
                 epsilon = Abs(Bx - B);
                 B = Bx;
-            } while (epsilon > 1E-12); // проверить работает ли с такой точностью  0.00001 / 206265
+            } while (epsilon > 1E-12); 
 
             return B;
         }

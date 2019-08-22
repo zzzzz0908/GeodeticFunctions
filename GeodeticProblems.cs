@@ -118,7 +118,7 @@ namespace GeodeticFunctions
 
 
             double u2 = cos2_alpha * (Pow(ellipsoid.a, 2) - Pow(ellipsoid.b, 2)) / Pow(ellipsoid.b, 2);
-            double A = 1 + u2 / 16384 * (4096 + u2 * (-768 + u2 * (320 - 175 * u2)));  //было 320 * 175
+            double A = 1 + u2 / 16384 * (4096 + u2 * (-768 + u2 * (320 - 175 * u2)));                    //было 320 * 175
             double B = u2 / 1024 * (256 + u2 * (-128 + u2 * (74 - 47 * u2)));
             double deltaSigma = B * Sin(sigma) * (cos_2sigma + B / 4.0 * (
                 Cos(sigma) * (-1 + 2 * Pow(cos_2sigma, 2)) -
