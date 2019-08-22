@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Math;
+﻿using static System.Math;
 
 
 namespace GeodeticFunctions
@@ -30,6 +25,9 @@ namespace GeodeticFunctions
         PZ90
     }
 
+    /// <summary>
+    /// Представляет модель эллипсоида.
+    /// </summary>
     public class Ellipsoid
     {
         /// <summary>
@@ -42,7 +40,7 @@ namespace GeodeticFunctions
             this.a = a;
             this.b = b;
             e1_2 = 1 - b * b / (a * a);
-            e2_2 = a * a / (b * b) - 1;  
+            e2_2 = a * a / (b * b) - 1;
         }
 
         /// <summary>
@@ -109,7 +107,7 @@ namespace GeodeticFunctions
         /// </summary>
         /// <param name="B"> Широта в радианах. </param>
         /// <returns></returns>
-        public double GetEta(double B)
+        private double GetEta(double B)
         {
             // TODO: Оптимизировать в конвертере координат 
             return e2 * Cos(B);
@@ -141,7 +139,7 @@ namespace GeodeticFunctions
         /// </summary>
         /// <param name="B"> Широта точки в радианах.</param>
         /// <returns></returns> 
-        public double GetV(double B)
+        private double GetV(double B)
         {
             // TODO: стоит ли использовать
             return Sqrt(1 + Pow(e2 * Cos(B), 2));
