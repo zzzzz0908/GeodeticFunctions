@@ -30,15 +30,17 @@ namespace GeodeticFunctions
     /// </summary>
     public class Ellipsoid
     {
+        
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="Ellipsoid"/>.
         /// </summary>
         /// <param name="a"> Большая (экваториальная) полуось эллипсоида, м. </param>
-        /// <param name="b"> Малая (полярная) полуось эллипсоида, м. </param>
-        public Ellipsoid(double a, double b)
+        /// <param name="iverseFlattening"> Полярное сжатие эллипсоида 1/f. </param>
+        public Ellipsoid(double a, double iverseFlattening)
         {
             this.a = a;
-            this.b = b;
+            this.f = 1 / iverseFlattening;            
+
             e1_2 = 1 - b * b / (a * a);
             e2_2 = a * a / (b * b) - 1;
         }
@@ -52,16 +54,16 @@ namespace GeodeticFunctions
             double[,] ellParams = new double[,]
             {
                 // Эллипсоид Красовского 
-                { 6378245.000, 6356863.018773 },
+                { 6378245.000, 298.3 }, 
                 // Эллипсоид WGS 84
-                { 6378137.000, 6356752.314245 },
+                { 6378137.000, 298.257223563 }, 
                 // Эллипсоид ПЗ-90
-                { 6378136.000, 6356751.3618 }
+                { 6378136.000, 298.25784 } 
             };
-
-            //this(ellParams[(int)ell, 0], ellParams[(int)ell, 1]);
+            
             this.a = ellParams[(int)ell, 0];
-            this.b = ellParams[(int)ell, 1];
+            this.f = 1 / ellParams[(int)ell, 1];
+
             e1_2 = 1 - b * b / (a * a);
             e2_2 = a * a / (b * b) - 1;
         }
@@ -74,7 +76,7 @@ namespace GeodeticFunctions
         /// <summary>
         /// Малая (полярная) полуось эллипсоида, м.
         /// </summary>
-        public double b { get; }
+        public double b => a * (1 - f);
 
         /// <summary>
         /// Квадрат первого эксцентрисистета.
@@ -89,7 +91,7 @@ namespace GeodeticFunctions
         /// <summary>
         /// Полярное сжатие.
         /// </summary>
-        public double f => (a - b) / a;
+        public double f { get; }
 
         /// <summary>
         /// Первый эксцентристет.
