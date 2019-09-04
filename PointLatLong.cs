@@ -8,14 +8,14 @@ namespace GeodeticFunctions
 {
     public struct PointLatLong
     {
-        public PointLatLong(double latitude, double longtitude)
+        public PointLatLong(double latitude, double longitude)
         {
             Latitude = latitude;
-            Longtitude = longtitude;
+            Longitude = longitude;
         }
 
         public double Latitude { get; set; }
-        public double Longtitude { get; set; }
+        public double Longitude { get; set; }
 
         //TODO: ограничение значений по градусам ?
     }

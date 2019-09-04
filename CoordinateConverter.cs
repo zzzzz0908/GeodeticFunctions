@@ -8,7 +8,7 @@ namespace GeodeticFunctions
     /// </summary>
     public class CoordinateConverter
     {
-        private Ellipsoid ell;
+        private readonly Ellipsoid ell;
 
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace GeodeticFunctions
         /// <param name="x"> Координата X (Northing).</param>
         /// <param name="y"> Координата Y (неприведённая) (Easting).</param>
         /// <returns></returns>
-        public double PlaneToGeodeticLongtitudeDelta(double x, double y)
+        public double PlaneToGeodeticlongitudeDelta(double x, double y)
         {
             double Bx = ell.LatitudeCalc(x);
             double Nx = ell.RadiusN(Bx);
