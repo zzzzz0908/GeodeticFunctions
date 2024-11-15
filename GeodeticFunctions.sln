@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29209.62
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeodeticFunctions", "GeodeticFunctions.csproj", "{0E0EF711-C2A2-4C8B-A322-7742834BCE64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeodeticFunctions.Core", "GeodeticFunctions.Core\GeodeticFunctions.Core.csproj", "{E7CA17C6-B86D-42F8-8FEB-6C25C6C69580}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeodeticFunctionsTests", "..\GeodeticFunctionsTests\GeodeticFunctionsTests.csproj", "{40803771-4539-423C-8AE6-A0E3048BE304}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeodeticFunctions.ConsoleApp", "GeodeticFunctions.ConsoleApp\GeodeticFunctions.ConsoleApp.csproj", "{91E496BE-5800-4679-8574-B1C937BB3A3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0E0EF711-C2A2-4C8B-A322-7742834BCE64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E0EF711-C2A2-4C8B-A322-7742834BCE64}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E0EF711-C2A2-4C8B-A322-7742834BCE64}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E0EF711-C2A2-4C8B-A322-7742834BCE64}.Release|Any CPU.Build.0 = Release|Any CPU
-		{40803771-4539-423C-8AE6-A0E3048BE304}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{40803771-4539-423C-8AE6-A0E3048BE304}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{40803771-4539-423C-8AE6-A0E3048BE304}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{40803771-4539-423C-8AE6-A0E3048BE304}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7CA17C6-B86D-42F8-8FEB-6C25C6C69580}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7CA17C6-B86D-42F8-8FEB-6C25C6C69580}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7CA17C6-B86D-42F8-8FEB-6C25C6C69580}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7CA17C6-B86D-42F8-8FEB-6C25C6C69580}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91E496BE-5800-4679-8574-B1C937BB3A3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91E496BE-5800-4679-8574-B1C937BB3A3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91E496BE-5800-4679-8574-B1C937BB3A3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91E496BE-5800-4679-8574-B1C937BB3A3F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
