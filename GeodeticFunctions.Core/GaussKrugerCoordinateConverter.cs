@@ -22,7 +22,6 @@ public class GaussKrugerCoordinateConverter
 
     public PointNE GeodeticToPlane(PointLatLon inputPoint, double L0)
     {
-
         var northing = GeodeticToPlaneX(inputPoint.Latitude, inputPoint.Longitude, L0);
         var easting = GeodeticToPlaneY(inputPoint.Latitude, inputPoint.Longitude, L0);
 
@@ -103,7 +102,7 @@ public class GaussKrugerCoordinateConverter
     }
 
 
-   
+
     /// <summary>
     /// Возвращает широту точки в радианах по плоским координатам.
     /// </summary>

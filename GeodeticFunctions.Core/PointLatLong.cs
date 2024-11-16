@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Globalization;
 
 namespace GeodeticFunctions.Core;
 
@@ -13,7 +7,7 @@ namespace GeodeticFunctions.Core;
 /// </summary>
 /// <param name="Latitude">Широта в радианах</param>
 /// <param name="Longitude">Долгота в радианах</param>
-public record struct PointLatLon(double Latitude, double Longitude, double Height = 0) 
+public record struct PointLatLon(double Latitude, double Longitude, double Height = 0)
 {
     public string ToDecimalDegreeString(int digits = 8)
     {
@@ -35,7 +29,7 @@ public record struct PointLatLon(double Latitude, double Longitude, double Heigh
 
         var formattedLat = FormattableString.Invariant($@"{Math.Abs((int)lat)}°{(int)latSec / 60:00}'{(latSec % 60).ToString(formatString, CultureInfo.InvariantCulture)}""{(lat >= 0 ? "N" : "S")}");
         var formattedLon = FormattableString.Invariant($@"{Math.Abs((int)lon)}°{(int)lonSec / 60:00}'{(lonSec % 60).ToString(formatString, CultureInfo.InvariantCulture)}""{(lon >= 0 ? "E" : "W")}");
-        
+
         return $"{formattedLat}  {formattedLon}";
     }
 }

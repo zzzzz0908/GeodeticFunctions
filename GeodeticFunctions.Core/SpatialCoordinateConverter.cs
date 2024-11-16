@@ -2,10 +2,6 @@
 
 namespace GeodeticFunctions.Core;
 
-
-/// <summary>
-/// Представляет методы для преобразования координат
-/// </summary>
 public class SpatialCoordinateConverter
 {
     private readonly Ellipsoid ell;
@@ -16,20 +12,8 @@ public class SpatialCoordinateConverter
     }
 
     public Point3D GeodeticToSpatial(PointLatLon inputPoint)
-    { 
-        return GeodeticToSpatial(inputPoint.Latitude, inputPoint.Longitude, inputPoint.Height);
-    }
-
-
-    private Point3D GeodeticToSpatial(double lat, double lon, double height)
     {
-        double N = ell.RadiusN(lat);
-
-        double x = (N + height) * Cos(lat) * Cos(lon); 
-        double y = (N + height) * Cos(lat) * Sin(lon);
-        double z = ((1 - ell.e1_2) * N + height) * Sin(lat);
-
-        return new Point3D(x, y, z);
+        return GeodeticToSpatial(inputPoint.Latitude, inputPoint.Longitude, inputPoint.Height);
     }
 
     public PointLatLon SpatialToGeodetic(Point3D inputPoint)
@@ -39,6 +23,17 @@ public class SpatialCoordinateConverter
         return new PointLatLon(lat, lon, h);
     }
 
+
+    private Point3D GeodeticToSpatial(double lat, double lon, double height)
+    {
+        double N = ell.RadiusN(lat);
+
+        double x = (N + height) * Cos(lat) * Cos(lon);
+        double y = (N + height) * Cos(lat) * Sin(lon);
+        double z = ((1 - ell.e1_2) * N + height) * Sin(lat);
+
+        return new Point3D(x, y, z);
+    }
 
     private (double lat, double lon, double height) SpatialToGeodetic(double x, double y, double z)
     {
@@ -64,7 +59,7 @@ public class SpatialCoordinateConverter
             i++;
             if (i > 256) throw new ArithmeticException("Итерации не сходятся");
         }
-        while (Abs(delta) > 1E-12); 
+        while (Abs(delta) > 1E-12);
 
         var h = Q * Cos(lat) + z * Sin(lat) - ell.RadiusN(lat) * (1 - ell.e1_2 * Pow(Sin(lat), 2));
 
