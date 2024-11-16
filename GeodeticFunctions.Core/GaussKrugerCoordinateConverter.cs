@@ -6,21 +6,21 @@ namespace GeodeticFunctions.Core;
 /// <summary>
 /// Представляет методы для преобразования координат
 /// </summary>
-public class CoordinateConverter
+public class GaussKrugerCoordinateConverter
 {
     private readonly Ellipsoid ell;
 
 
     /// <summary>
-    /// Инициализирует новый экземпляр класса <see cref="CoordinateConverter"/>.
+    /// Инициализирует новый экземпляр класса <see cref="GaussKrugerCoordinateConverter"/>.
     /// </summary>
     /// <param name="ellipsoid"> Эллипсоид, на котором выполняется преобразование координат. </param>
-    public CoordinateConverter(Ellipsoid ellipsoid)
+    public GaussKrugerCoordinateConverter(Ellipsoid ellipsoid)
     {
         ell = ellipsoid;
     }
 
-    public PointNE GeodeticToPlane(PointLatLong inputPoint, double L0)
+    public PointNE GeodeticToPlane(PointLatLon inputPoint, double L0)
     {
 
         var northing = GeodeticToPlaneX(inputPoint.Latitude, inputPoint.Longitude, L0);
@@ -29,28 +29,15 @@ public class CoordinateConverter
         return new PointNE(northing, easting);
     }
 
-    public PointLatLong PlaneToGeodetic(PointNE inputPoint, double L0)
+    public PointLatLon PlaneToGeodetic(PointNE inputPoint, double L0)
     {
         var latitude = PlaneToGeodeticLatitude(inputPoint.Northing, inputPoint.Easting);
         var longitude = PlaneToGeodeticlongitudeDelta(inputPoint.Northing, inputPoint.Easting) + L0;
 
-        return new PointLatLong(latitude, longitude);
+        return new PointLatLon(latitude, longitude);
     }
 
 
-    /// <summary>
-    /// Преобразует геодезические координаты в плоские.
-    /// </summary>
-    /// <param name="B"> Широта точки в радианах. </param>
-    /// <param name="L"> Долгота точки в радианах. </param>
-    /// <param name="L0"> Долгота осевого меридиана в радианах. </param>
-    /// <param name="x"> Плоская координата X (Northing). </param>
-    /// <param name="y"> Плоская координата Y (Northing). </param>
-    public void GeodeticToPlane(double B, double L, double L0, out double x, out double y)
-    {
-        x = GeodeticToPlaneX(B, L, L0);
-        y = GeodeticToPlaneY(B, L, L0);
-    }
 
     /// <summary>
     /// Возвращает значение плоской координаты X (Northing).
