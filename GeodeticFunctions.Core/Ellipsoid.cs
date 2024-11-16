@@ -43,6 +43,9 @@ public class Ellipsoid
 
         e1_2 = 1 - b * b / (a * a);
         e2_2 = a * a / (b * b) - 1;
+
+        e1 = Sqrt(e1_2);
+        e2 = Sqrt(e2_2);
     }
 
     /// <summary>
@@ -66,6 +69,9 @@ public class Ellipsoid
 
         e1_2 = 1 - b * b / (a * a);
         e2_2 = a * a / (b * b) - 1;
+
+        e1 = Sqrt(e1_2);
+        e2 = Sqrt(e2_2);
     }
 
     /// <summary>
@@ -81,12 +87,12 @@ public class Ellipsoid
     /// <summary>
     /// Квадрат первого эксцентрисистета.
     /// </summary>
-    private readonly double e1_2;
+    public double e1_2 { get; }
 
     /// <summary>
     /// Квадрат второго эксцентрисистета.
     /// </summary>
-    private readonly double e2_2;
+    public double e2_2 { get; }
 
     /// <summary>
     /// Полярное сжатие.
@@ -96,12 +102,12 @@ public class Ellipsoid
     /// <summary>
     /// Первый эксцентристет.
     /// </summary>
-    public double e1 => Sqrt(e1_2);
+    public double e1 { get; }
 
     /// <summary>
     /// Второй эксцентриситет.
     /// </summary>
-    public double e2 => Sqrt(e2_2);
+    public double e2 { get; }
 
 
     /// <summary>
@@ -155,8 +161,8 @@ public class Ellipsoid
     /// <returns></returns>
     public double RadiusM(double B)
     {
-        //return a * (1 - e1 * e1) / Pow(GetW(B), 3);
-        return b * b / (a * Pow(GetW2(B), 1.5));
+        return a * (1 - e1 * e1) / Pow(GetW(B), 3);
+        //return b * b / (a * Pow(GetW2(B), 1.5));
     }
 
 
